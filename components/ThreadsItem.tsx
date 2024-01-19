@@ -12,9 +12,9 @@ const blurhash = "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWX
 
 export default function ThreadsItem(thread: Thread):JSX.Element {
     return (
-    <View>
-        <Text>{thread.author.username} hey</Text>
-        <View>
+    <View style={styles.container}>
+        <PostLeftSide {...thread}/>
+        <View style= {{gap: 6, flexShrink: 1}}>
             <PostHeading 
                 name={thread.author.name} 
                 createdAt={thread.createdAt} 
@@ -37,6 +37,41 @@ export default function ThreadsItem(thread: Thread):JSX.Element {
             />
         </View>
     </View>
+    )
+}
+
+function PostLeftSide(thread: Thread){
+    const currentTheme = useColorScheme();
+    const borderColor = currentTheme === "light" ? "#00000020" : "#ffffff20";
+
+    return(
+        <View style={{justifyContent: "space-between"}}>
+            <Image
+                source={thread.author.photo}
+                style={styles.image}
+                placeholder={blurhash}
+                contentFit="cover"
+                transition={500}
+            />
+            <View
+                style={{borderWidth: 1, alignSelf: "center", borderColor: borderColor, flexGrow: 1}}
+            ></View>
+            <View
+                style={{width: 20, alignItems: "center", alignSelf: 'center', gap: 3}}
+            >
+                {[1,2,3].map((index) => (
+                    <Image
+                        key={index}
+                        //@ts-ignore
+                        source={thread.replies[index - 1]?.author.photo}
+                        style={{width: index * 7, height: index * 7, borderRadius: 15}}
+                        placeholder={blurhash}
+                        contentFit="cover"
+                        transition={500}
+                    />
+                ))}
+            </View>
+        </View>
     )
 }
 
